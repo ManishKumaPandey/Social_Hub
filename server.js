@@ -26,7 +26,7 @@ mongoose.connect(process.env.MONGO_URI)
     });
   })
   .catch((error) => {
-    console.log("DB Connection Failed:", error);
+    console.log("Data base Connection Failed:", error);
   });
 
   
