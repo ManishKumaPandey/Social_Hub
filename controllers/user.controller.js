@@ -59,6 +59,7 @@ export const loginUser = asyncHandler(async(req,res) =>{
   }
   
   const loggedInUser = await User.findById(user._id).select("-password");
+
   const accessToken = user.generateAccessToken();
   const refreshToken = user.generateRefreshToken();
   const option = {
@@ -74,4 +75,13 @@ export const loginUser = asyncHandler(async(req,res) =>{
     data:loggedInUser, accessToken,refreshToken,
     message:"successfully login"
    })   
+})
+export const getCurrentUser = asyncHandler(async(req,res)=>{
+  return res
+    .status(200)
+    .json({
+      success: true,
+      data:req.user,
+      message:"current user fetched successfully"
+    });
 })

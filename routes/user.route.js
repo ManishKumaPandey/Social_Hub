@@ -1,5 +1,6 @@
 import express from "express";
-import { registerUser , loginUser} from "../controllers/user.controller.js";
+import { registerUser , loginUser,getCurrentUser} from "../controllers/user.controller.js";
+import { verifyJWT } from "../middlewares/auth.middleware.js";
 
 const router = express.Router();
 
@@ -12,6 +13,6 @@ router.route("/").get((req,res)=>{
 
 router.route("/login").post(loginUser);
 router.route("/register").post(registerUser) ;
-   
+router.route("/me").get(verifyJWT, getCurrentUser);
 
 export default router;
