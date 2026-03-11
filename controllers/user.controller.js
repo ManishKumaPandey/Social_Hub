@@ -3,8 +3,8 @@ import bcrypt from "bcrypt";
 import { asyncHandler } from "../Utils/asyncHandler.js";
 import { apiError } from "../Utils/apiError.js";
 
-export const registerUser = async(req, res) =>{
-    try{
+export const registerUser = asyncHandler(async(req, res) =>{
+    
        const {userName,email,phone,password} = req.body;
        if(!email && !phone){
         return res.status(400).json({
@@ -32,13 +32,8 @@ export const registerUser = async(req, res) =>{
 
        res.status(201).json({message:"User registerd successfully", createdUser});
 
-
-    }
-    catch(error){
-      res.status(500).json({message: error.message});
-    }
-
-};
+      })
+    
 
 export const loginUser = asyncHandler(async(req,res) =>{
   const{email,phone,password} = req.body;

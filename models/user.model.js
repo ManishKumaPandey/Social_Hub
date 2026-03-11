@@ -27,6 +27,12 @@ const userSchema = new mongoose.Schema({
         type:String,
         sparse:true,
         unique:true
+     },
+     bio:{
+      type:String
+     },
+     avatar:{
+      type:String
      }
         
       
