@@ -2,6 +2,7 @@ import User from "../models/user.model.js";
 import bcrypt from "bcrypt";
 import { asyncHandler } from "../Utils/asyncHandler.js";
 import { apiError } from "../Utils/apiError.js";
+import { uploadOnCloudinary } from "../Utils/cloudinary.js";
 
 export const registerUser = asyncHandler(async(req, res) =>{
     
@@ -79,4 +80,38 @@ export const getCurrentUser = asyncHandler(async(req,res)=>{
       data:req.user,
       message:"current user fetched successfully"
     });
+})
+
+export const updateProfile = asyncHandler(async(req,res)=>{
+  const{email,phone,password,bio,avatar} = req.body;
+  if(!email && !phone  && !bio ){
+    throw new apiError(400, "any one fields is required")
+  }
+  const user = User.findByIdAndUpdate(req.user._id,
+    {$set:{email,phone,bio}},
+    {new:true}
+  ).select("-password")
+
+  return res 
+      .status(200)
+      .json({
+        success:true,
+        data:req.user,
+        message:"user updated successfully"
+      })
+})
+
+export const updateUserAvatar = asyncHandler(async(req,res)=>{
+  const avatarLocalPath =req.file?.path
+  if(!avatarLocalPath)
+    throw new apiError(400, "avatar file is missing")
+  const avatar = await uploadOnCloudinary(avatarLocalPath)
+
+  if(!avatar.url){
+    throw new apiError(400, "error while uploading")
+  }
+  const user = await User.findByIdAndUpdate(req.user?._id,
+    {$set:{avatar:avatar.url}},
+    {new:true}
+  ).select("-password")
 })
