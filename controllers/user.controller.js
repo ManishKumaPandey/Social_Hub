@@ -87,11 +87,10 @@ export const updateProfile = asyncHandler(async(req,res)=>{
   if(!email && !phone  && !bio ){
     throw new apiError(400, "any one fields is required")
   }
-  const user = User.findByIdAndUpdate(req.user._id,
+  const user = User.findByIdAndUpdate(req.user?._id,
     {$set:{email,phone,bio}},
     {new:true}
   ).select("-password")
-
   return res 
       .status(200)
       .json({
@@ -103,15 +102,23 @@ export const updateProfile = asyncHandler(async(req,res)=>{
 
 export const updateUserAvatar = asyncHandler(async(req,res)=>{
   const avatarLocalPath =req.file?.path
+  console.log(req.file)
   if(!avatarLocalPath)
     throw new apiError(400, "avatar file is missing")
   const avatar = await uploadOnCloudinary(avatarLocalPath)
 
-  if(!avatar.url){
+  if(!avatar || !avatar.url ){
     throw new apiError(400, "error while uploading")
   }
   const user = await User.findByIdAndUpdate(req.user?._id,
     {$set:{avatar:avatar.url}},
     {new:true}
   ).select("-password")
+  return res 
+       .status(200)
+       .json({
+        success:true,
+        data:user,
+        message:"user avatar updated successfully"
+       })
 })

@@ -15,7 +15,7 @@ router.route("/").get((req,res)=>{
 router.route("/login").post(loginUser);
 router.route("/register").post(registerUser) ;
 router.route("/me").get(verifyJWT, getCurrentUser);
-router.route("/updateAccountDetails").patch(verifyJWT,updateProfile);
+router.route("/updateAccountDetails").patch(verifyJWT,upload.single("avatar"),updateProfile);
 router.route("/Updateavatar").patch(verifyJWT,upload.single('avatar'),updateUserAvatar);
 
 export default router;
