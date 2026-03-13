@@ -17,7 +17,7 @@ const commentSchema = new mongoose.Schema({
 
 const postSchema = new mongoose.Schema({
     author:{
-        type:mongoose.Types.ObjectId,
+        type:mongoose.Schema.Types.ObjectId,
         required:true,
         ref:"User"
     },
@@ -29,18 +29,16 @@ const postSchema = new mongoose.Schema({
         type:String,
         sparse:true
     },
-    // audio:{
-    //     type:String
-    // },
+    
     likes:[
         {
-            type:mongoose.Types.ObjectId,
+            type:mongoose.Schema.Types.ObjectId,
             ref:"User"
         }
     ],
     dislike:[
         {
-        type:mongoose.Types.ObjectId,
+        type:mongoose.Schema.Types.ObjectId,
         ref:"User"
         }
     ],

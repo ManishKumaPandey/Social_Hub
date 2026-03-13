@@ -102,12 +102,12 @@ export const updateProfile = asyncHandler(async(req,res)=>{
 
 export const updateUserAvatar = asyncHandler(async(req,res)=>{
   const avatarLocalPath =req.file?.path
-  console.log(req.file)
+  
   if(!avatarLocalPath)
     throw new apiError(400, "avatar file is missing")
   const avatar = await uploadOnCloudinary(avatarLocalPath)
 
-  if(!avatar || !avatar.url ){
+  if(!avatar && !avatar.url ){
     throw new apiError(400, "error while uploading")
   }
   const user = await User.findByIdAndUpdate(req.user?._id,
