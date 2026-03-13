@@ -22,10 +22,12 @@ const postSchema = new mongoose.Schema({
         ref:"User"
     },
     content:{
-        type:string
+        type:String,
+        sparse:true
     },
     image:{
-        type:String
+        type:String,
+        sparse:true
     },
     // audio:{
     //     type:String
