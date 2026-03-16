@@ -1,5 +1,6 @@
 import express from "express";
-import { postUser,deletePostUser,getAllPost ,likeUnlikePost, addComment,deleteComment} from "../controllers/post.controller.js";
+import { postUser,deletePostUser,getAllPost ,likeUnlikePost, addComment,deleteComment} 
+from "../controllers/post.controller.js";
 import { upload } from "../middlewares/multer.middleware.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
 import { verify } from "crypto";
