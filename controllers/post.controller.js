@@ -52,7 +52,7 @@ export const deletePostUser = asyncHandler(async(req,res)=>{
 )
 export const getAllPost = asyncHandler(async(req,res)=>{
     
-    const post = Post.find().populate("author", "userName avatar")
+    const post = await Post.find().populate("author", "userName avatar")
     if(!post){
         throw new apiError(404,"post not found")
     }
@@ -63,5 +63,72 @@ export const getAllPost = asyncHandler(async(req,res)=>{
         data:post,
         message:"Post fetched successfully"
        })
+})
+export const likeUnlikePost = asyncHandler(async(req,res)=>{
+  const post_id = req.params.id
+  const user_id = req.user._id
+  const post = await Post.findById(post_id)
+  if(!post){
+    throw new apiError (404,"not found")
+  }
+  if(post.likes.includes(user_id)){
+    await Post.findByIdAndUpdate(post_id,{$pull:{likes:user_id}})
+    return res
+        .status(200)
+        .json({
+          success:true,
+          message:"Post unliked"
+        })
+  }
+  else{
+    await Post.findByIdAndUpdate(post_id,{$push:{likes:user_id}})
+    return res 
+       .status(200)
+       .json({
+        success:true,
+        message:"Post liked"
+       })
+  }
+})
+export const addComment = asyncHandler(async(req,res)=>{
+    const post_id = req.params.id
+    const user_id = req.user._id
+    const text = req.body.text
+    if(!text){
+      throw new apiError(400,"text is required")
+    }
+    const post = await Post.findById(post_id)
+    if(!post){
+      throw new apiError(404,"not found ")
+    }
+    await Post.findByIdAndUpdate(post_id,{$push:{user:user_id, comments:text}})
+    return res 
+      .status(200)
+      .json({
+        success:true,
+        message:"comments are added"
+      })
+})
+export const deleteComment = asyncHandler(async(req,res)=>{
+  const post_id = req.params.id
+  const comment_id = req.params.comment_id
+  const post = await Post.findById(post_id)
+  if(!post){
+    throw new apiError (404,"not found")
+  }
+  const comment = post.comments.find(c=>c._id.toString()=== comment_id)
+  if(comment.user.toString() != req.user._id.toString()){
+    throw new apiError(403,"you are not authorized to delete this post ")
+  }
+  else{
+    await Post.findByIdAndUpdate(post_id,{$pull:{comments:{_id:comment_id}}})
+  }
+  return res 
+     .status(200)
+     .json({
+      success: true,
+      message:"comment is deleted "
+     })
+
 })
 
