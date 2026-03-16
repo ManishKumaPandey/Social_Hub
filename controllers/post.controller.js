@@ -16,7 +16,7 @@ export const postUser = asyncHandler(async(req,res)=>{
         }) 
     }
     
-    const Image = image ? await uploadOnCloudinary(image) : null
+    const uploadImage = image ? await uploadOnCloudinary(image) : null
 
     const createPost = await Post.create({
         author:user,
