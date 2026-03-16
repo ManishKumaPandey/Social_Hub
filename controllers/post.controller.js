@@ -101,7 +101,7 @@ export const addComment = asyncHandler(async(req,res)=>{
     if(!post){
       throw new apiError(404,"not found ")
     }
-    await Post.findByIdAndUpdate(post_id,{$push:{user:user_id, comments:text}})
+    await Post.findByIdAndUpdate(post_id,{$push:{comments:{user:user_id,text:text}}})
     return res 
       .status(200)
       .json({
